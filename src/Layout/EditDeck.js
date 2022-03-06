@@ -31,7 +31,7 @@ export default function EditDeck() {
     event.preventDefault();
     const response = updateDeck(deck);
     console.log(deck);
-    history.push(`${url}`);
+    history.push(`/decks/${deck.id}`);
   };
 
   return (

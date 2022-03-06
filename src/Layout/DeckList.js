@@ -14,8 +14,6 @@ export default function DeckList({ deck }) {
 
     if (confirm) {
       await deleteDeck(deck.id, signal);
-      history.push("/");
-    } else {
       history.go(0);
     }
   };
