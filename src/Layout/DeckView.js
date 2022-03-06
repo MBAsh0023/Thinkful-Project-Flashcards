@@ -10,10 +10,10 @@ export default function DeckView() {
   const history = useHistory();
 
   useEffect(() => {
-    const { signal } = new AbortController();
+    const abortController = new AbortController();
     async function loadDeck() {
       try {
-        const cardsFromAPI = await readDeck(deckId, signal);
+        const cardsFromAPI = await readDeck(deckId, abortController.signal);
 
         setDeck(cardsFromAPI);
       } catch (e) {
@@ -21,7 +21,7 @@ export default function DeckView() {
       }
     }
     loadDeck();
-    // return AbortController.abort()
+    return () => abortController.abort()
   }, [deckId]);
 
   const deleteDeckHandler = async () => {
@@ -41,12 +41,12 @@ export default function DeckView() {
   return (
     <div>
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">
             <Link to="/">Home</Link>
           </li>
           <li
-            class="breadcrumb-item active"
+            className="breadcrumb-item active"
             aria-current="page"
           >{`${name}`}</li>
         </ol>

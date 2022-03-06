@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { readDeck, readCard } from "../utils/api";
+import { Link, useParams, useHistory } from "react-router-dom";
+import { readDeck, readCard, updateCard } from "../utils/api";
 import CardForm from "./CardForm";
 
 export default function EditCard() {
@@ -9,7 +9,7 @@ export default function EditCard() {
   const [deck, setDeck] = useState([]);
   // const { id, name, cards } = deck;
   const [card, setCard] = useState({ front: "", back: "" });
-  // const history = useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -41,7 +41,16 @@ export default function EditCard() {
     // return abortController.abort()
   }, [deckId]);
 
-  
+  const changeForm = ({ target }) => {
+    setCard({ ...card, [target.name]: target.value });
+  };
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    const response = await updateCard(card);
+    console.log(card);
+    history.push(`/decks/${deck.id}`);
+  };
 
   return (
     <div>
@@ -52,7 +61,8 @@ export default function EditCard() {
               <Link to="/">Home</Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to={`/decks/${deck.id}`}>{`Deck: ${deck.name}`}</Link>
+              {" "}
+              <Link to={`/decks/${deck.id}`}>{`${deck.name}`}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               Edit Card
@@ -62,7 +72,41 @@ export default function EditCard() {
       </div>
       <h1>Edit Card</h1>
       <div>
-        <CardForm />
+        <CardForm
+          submitForm={submitForm}
+          changeForm={changeForm}
+          card={card}
+          deck={deck}
+        />
+        {/* <div>
+               <form onSubmit={submitForm}>
+                 <div>
+                   <label htmlFor="front">Front</label>
+                   <textarea
+                     name="front"
+                     type="text"
+                     value={card.front}
+                     placeholder="Front side of card"
+                     onChange={changeForm}
+                   ></textarea>
+                 </div>
+                 <div>
+                   <label htmlFor="back">Back</label>
+                   <textarea
+                     name="back"
+                     type="text"
+                     value={card.back}
+                     placeholder="Back side of card"
+                     onChange={changeForm}
+                   ></textarea>
+                 </div>
+                 <Link to={`/decks/${deck.id}`}>
+                   <button>Done</button>
+                 </Link>
+                   <button
+                   type="submit">Save</button>
+               </form>
+               </div>    */}
       </div>
     </div>
   );
